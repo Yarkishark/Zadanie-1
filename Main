@@ -1,0 +1,18 @@
+public class Main {
+    public static void main(String[] args) {
+        BankAccount acc1 = new BankAccount("Ivan Ivanov");
+        BankAccount acc2 = new BankAccount("Petr Petrov");
+
+        System.out.println(acc1);
+        System.out.println(acc2);
+
+        System.out.println("Пополнение acc1 на 1000: " + acc1.deposit(1000));
+        System.out.println("Снятие с acc1 500: " + acc1.withdraw(500));
+        System.out.println("Перевод с acc1 на acc2 300: " + acc1.transfer(acc2, 300));
+
+        System.out.println(acc1);
+        System.out.println(acc2);
+
+        System.out.println("Сравнение счетов: acc1.equals(acc2) = " + acc1.equals(acc2));
+    }
+}
