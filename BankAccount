@@ -1,0 +1,111 @@
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.Random;
+
+public class BankAccount {
+    private String ownerName;
+    private int balance;
+    private LocalDateTime openedDate;
+    private boolean isBlocked;
+    private String number;
+
+    public BankAccount(String ownerName) {
+        this.ownerName = ownerName;
+        this.balance = 0;
+        this.openedDate = LocalDateTime.now();
+        this.isBlocked = false;
+        this.number = generateAccountNumber();
+    }
+
+    private String generateAccountNumber() {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(8);
+        for (int i = 0; i < 8; i++) {
+            int digit = random.nextInt(10);
+            sb.append(digit);
+        }
+        return sb.toString();
+    }
+
+    public boolean deposit(int amount) {
+        if (amount <= 0 || isBlocked) {
+            return false;
+        }
+        balance += amount;
+        return true;
+    }
+
+    public boolean withdraw(int amount) {
+        if (amount <= 0 || amount > balance || isBlocked) {
+            return false;
+        }
+        balance -= amount;
+        return true;
+    }
+
+    public boolean transfer(BankAccount otherAccount, int amount) {
+        if (otherAccount == null || amount <= 0 || amount > balance || isBlocked || otherAccount.isBlocked) {
+            return false;
+        }
+        boolean withdrawn = this.withdraw(amount);
+        if (!withdrawn) {
+            return false;
+        }
+        boolean deposited = otherAccount.deposit(amount);
+        if (!deposited) {
+            this.deposit(amount);
+            return false;
+        }
+        return true;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+
+    public LocalDateTime getOpenedDate() {
+        return openedDate;
+    }
+
+    public boolean isBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    @Override
+    public String toString() {
+        return "BankAccount{" +
+                "ownerName='" + ownerName + '\'' +
+                ", balance=" + balance +
+                ", openedDate=" + openedDate +
+                ", isBlocked=" + isBlocked +
+                ", number='" + number + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BankAccount that = (BankAccount) o;
+
+        return Objects.equals(number, that.number);
+    }
+
+    @Override
+    public int hashCode() {
+        return number != null ? number.hashCode() : 0;
+    }
+}
